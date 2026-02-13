@@ -30,9 +30,9 @@ class Pet(models.Model):
     
     #Criado a class interna para não fugir do padrão os registros
     class Species(models.TextChoices):
-        DOG = "Cachorro", "CACHORRO"
-        CAT = "Gato", "GATO"
-        OTHER = "Outros", "OUTROS"
+        DOG = "DOG", "CACHORRO"
+        CAT = "CAT", "GATO"
+        OTHER = "OTHER", "OUTROS"
 
     species = models.CharField(
         max_length=10,
