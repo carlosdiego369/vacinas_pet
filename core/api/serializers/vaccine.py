@@ -1,15 +1,16 @@
-from core.models import Vaccine, ClinicVaccine
 from rest_framework import serializers
+from core.models import Vaccine, ClinicVaccine
 
 
-class VaccineSerializers(serializers.ModelSerializer):
+class VaccineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccine
-        fields = ["id", "name", "booster_interval_day"]
+        fields = ["id", "name", "booster_interval_days"]
 
 
-class ClinicVaccineSerializers(serializers.ModelSerializer):
+class ClinicVaccineSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicVaccine
         fields = ["id", "clinic", "vaccine"]
-        read_only_fields = ["clinic"] #Leitura do ID quando o user está logado e indetifica a clinica para qual ele está cadastrado
+        read_only_fields = ["clinic"]
+ #Leitura do ID quando o user está logado e indetifica a clinica para qual ele está cadastrado
