@@ -8,4 +8,15 @@ class PetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pet
-        fields = ["id", "name", "species", "species_label", "tutor", "tutor_name"]
+        fields = "__all__"
+        read_only_fields = ["clinic"]
+
+    def validate(self, attrs):
+        request = self.context["request"]
+        clinic = request.user.profile.clinic
+
+        tutor = attrs.get("tutor")
+        if tutor and tutor.clinic_id != clinic.id:
+            raise serializers.ValidationError({"tutor": "Tutor não pertence à sua clínica."})
+
+        return attrs

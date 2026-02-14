@@ -1,6 +1,8 @@
 from django.db import models
 from .clinic import Clinic
 from .tutor import Tutor
+from django.core.exceptions import ValidationError
+
 
 
 class Pet(models.Model):
@@ -22,6 +24,15 @@ class Pet(models.Model):
         choices=Species.choices,
         default=Species.OTHER
     )
+
+    def clean(self):
+        # tutor tem que ser da mesma clínica do pet
+        if self.tutor_id and self.clinic_id and self.tutor.clinic_id != self.clinic_id:
+            raise ValidationError({"tutor": "Tutor deve pertencer à mesma clínica do Pet."})
+
+    def save(self, *args, **kwargs):
+        self.full_clean()  # chama clean() antes de salvar
+        return super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.name} - {self.tutor.name}"
