@@ -7,7 +7,9 @@ class VaccinationRecord(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name="vaccinations")
     vaccine = models.ForeignKey(Vaccine, on_delete=models.CASCADE, related_name="vaccinations")
 
+    #Quando foi aplicado
     applied_at = models.DateField()
+    #Próxima dose
     next_due_at = models.DateField(null=True, blank=True)
 
     class Meta:
