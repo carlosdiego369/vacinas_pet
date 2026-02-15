@@ -61,6 +61,38 @@ python manage.py runserver
 
 As listagens usam paginação (20 itens por página).
 
+## Docker
+
+Requisitos: [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/).
+
+**Imagem pronta no Docker Hub:** [carlosdiegofs/vacinas_pet](https://hub.docker.com/repository/docker/carlosdiegofs/vacinas_pet/general) — para rodar sem build: `docker run -d -p 8000:8000 carlosdiegofs/vacinas_pet:latest`. Detalhes no [DOCKER-GUIA.md](DOCKER-GUIA.md).
+
+```bash
+# Criar .env (opcional; use .env.example como base)
+cp .env.example .env
+
+# Subir a API (build local)
+docker compose up -d --build
+
+# Ver logs
+docker compose logs -f web
+```
+
+- API: `http://localhost:8000/api/`
+- Admin: `http://localhost:8000/admin/`
+
+O banco SQLite fica persistido no volume (arquivo `db.sqlite3` na raiz do projeto). Para criar um superusuário após subir o container:
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+Para parar:
+
+```bash
+docker compose down
+```
+
 ## Variáveis de ambiente (opcional)
 
 - `DJANGO_SECRET_KEY`: chave secreta (obrigatório em produção).

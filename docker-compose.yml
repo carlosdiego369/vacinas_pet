@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    container_name: vacinas_pets_web
+    ports:
+      - "8000:8000"
+    # Descomente para usar variáveis do arquivo .env:
+    # env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=api.settings
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,web
+      - DJANGO_DEBUG=False
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s=socket.socket(); s.settimeout(3); s.connect(('127.0.0.1', 8000)); s.close()"]
+      interval: 45s
+      timeout: 10s
+      retries: 5
+      start_period: 30s

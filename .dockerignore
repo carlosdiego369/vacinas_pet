@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv
+.venv
+env
+.env.local
+*.egg-info
+.eggs
+
+# Django
+*.log
+db.sqlite3
+media
+staticfiles
+
+# IDE / OS
+.idea
+.vscode
+.cursor
+*.swp
+.DS_Store
+Thumbs.db
+
+# Testes e docs (opcional)
+.pytest_cache
+.coverage
+htmlcov
+*.md
+!README.md
+
+# Postman (não necessário na imagem)
+collection_postman
