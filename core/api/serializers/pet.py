@@ -11,11 +11,19 @@ class PetSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["clinic"]
 
-    def validate(self, attrs):
-        request = self.context["request"]
-        clinic = request.user.profile.clinic
-        tutor = attrs.get("tutor")
+    def create(self, validated_data):
+        clinic = getattr(self, "clinic", None)
+        if clinic is not None:
+            validated_data["clinic"] = clinic
+        return super().create(validated_data)
 
+    def validate(self, attrs):
+        request = self.context.get("request")
+        profile = getattr(request.user, "profile", None) if request else None
+        clinic = getattr(profile, "clinic", None) if profile else None
+        if clinic is None:
+            return attrs
+        tutor = attrs.get("tutor")
         if tutor and tutor.clinic_id != clinic.id:
             raise serializers.ValidationError({"tutor": "Tutor não pertence à sua clínica."})
 
