@@ -27,17 +27,23 @@ class Profile(models.Model):
     tutor = models.OneToOneField(Tutor, on_delete=models.SET_NULL, null=True, blank=True)
 
     def clean(self):
-        # 1) Se role = CLINIC, não pode ter tutor
-        if self.role == "CLINIC" and self.tutor_id:
-            raise ValidationError({"tutor": "Usuário CLINIC não deve ter tutor vinculado."})
+    # CLINIC
+        if self.role == self.Role.CLINIC:
+            if not self.clinic_id:
+                raise ValidationError({"clinic": "Usuário CLINIC precisa ter uma clínica vinculada."})
+            if self.tutor_id:
+                raise ValidationError({"tutor": "Usuário CLINIC não deve ter tutor vinculado."})
 
-        # 2) Se role = TUTOR, precisa ter tutor
-        if self.role == "TUTOR" and not self.tutor_id:
-            raise ValidationError({"tutor": "Usuário TUTOR precisa ter tutor vinculado."})
+    # TUTOR
+        if self.role == self.Role.TUTOR:
+            if not self.tutor_id:
+                raise ValidationError({"tutor": "Usuário TUTOR precisa ter tutor vinculado."})
+        # força clinic = tutor.clinic
+            if self.clinic_id and self.clinic_id != self.tutor.clinic_id:
+                raise ValidationError({"clinic": "Clinic do Profile deve ser a mesma clinic do Tutor."})
+            if not self.clinic_id:
+                self.clinic = self.tutor.clinic
 
-        # 3) Se tem tutor e clinic, eles precisam ser da mesma clínica
-        if self.tutor_id and self.clinic_id and self.tutor.clinic_id != self.clinic_id:
-            raise ValidationError({"tutor": "Tutor deve pertencer à mesma clínica do Profile."})
 
     def save(self, *args, **kwargs):
         self.full_clean()
