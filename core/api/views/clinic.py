@@ -6,6 +6,12 @@ from core.api.permissions import IsClinicUser
 
 
 class ClinicViewSet(viewsets.ModelViewSet):
-    queryset = Clinic.objects.all()
     serializer_class = ClinicSerializer
     permission_classes = [IsAuthenticated, IsClinicUser]
+
+    def get_queryset(self):
+        """Clínica vê apenas a própria clínica (multi-tenant)."""
+        profile = self.request.user.profile
+        if profile.clinic_id is None:
+            return Clinic.objects.none()
+        return Clinic.objects.filter(pk=profile.clinic_id)

@@ -27,14 +27,14 @@ class Profile(models.Model):
     tutor = models.OneToOneField(Tutor, on_delete=models.SET_NULL, null=True, blank=True)
 
     def clean(self):
-    # CLINIC
+        # CLINIC
         if self.role == self.Role.CLINIC:
             if not self.clinic_id:
                 raise ValidationError({"clinic": "Usuário CLINIC precisa ter uma clínica vinculada."})
             if self.tutor_id:
                 raise ValidationError({"tutor": "Usuário CLINIC não deve ter tutor vinculado."})
 
-    # TUTOR
+        # TUTOR
         if self.role == self.Role.TUTOR:
             if not self.tutor_id:
                 raise ValidationError({"tutor": "Usuário TUTOR precisa ter tutor vinculado."})

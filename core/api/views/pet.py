@@ -1,9 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from core.models import Pet
+from core.models import Pet, Profile
 from core.api.serializers import PetSerializer
 from core.api.permissions import IsTutorReadOnlyOrClinicFullAccess
-
 
 
 class PetViewSet(viewsets.ModelViewSet):
@@ -12,9 +11,7 @@ class PetViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         p = self.request.user.profile
-
-        #A clínica vê só dela e tutor só vê os próprios pets
-        if p.role == "CLINIC":
+        if p.role == Profile.Role.CLINIC:
             return Pet.objects.filter(clinic=p.clinic)
 
         return Pet.objects.filter(tutor=p.tutor)

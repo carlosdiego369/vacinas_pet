@@ -13,4 +13,9 @@ class ClinicVaccineSerializer(serializers.ModelSerializer):
         model = ClinicVaccine
         fields = ["id", "clinic", "vaccine"]
         read_only_fields = ["clinic"]
- #Leitura do ID quando o user está logado e indetifica a clinica para qual ele está cadastrado
+
+    def create(self, validated_data):
+        clinic = getattr(self, "clinic", None)
+        if clinic is not None:
+            validated_data["clinic"] = clinic
+        return super().create(validated_data)

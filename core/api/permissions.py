@@ -7,7 +7,12 @@ def _has_profile(user) -> bool:
 
 class IsClinicUser(BasePermission):
     def has_permission(self, request, view):
-        return _has_profile(request.user) and request.user.profile.role == "CLINIC"
+        if not _has_profile(request.user):
+            return False
+        try:
+            return request.user.profile.role == Profile.Role.CLINIC
+        except Profile.DoesNotExist:
+            return False
 
 
 class IsTutorReadOnlyOrClinicFullAccess(BasePermission):

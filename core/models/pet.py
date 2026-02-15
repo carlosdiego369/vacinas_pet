@@ -22,8 +22,11 @@ class Pet(models.Model):
     species = models.CharField(
         max_length=10,
         choices=Species.choices,
-        default=Species.OTHER
+        default=Species.OTHER,
     )
+
+    class Meta:
+        ordering = ["name"]
 
     def clean(self):
         # tutor tem que ser da mesma clínica do pet

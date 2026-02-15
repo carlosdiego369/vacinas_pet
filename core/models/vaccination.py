@@ -13,8 +13,8 @@ class VaccinationRecord(models.Model):
     next_due_at = models.DateField(null=True, blank=True)
 
     class Meta:
-        # Evita duplicar o mesmo registro de vacina no mesmo dia para o mesmo pet
         unique_together = ("pet", "vaccine", "applied_at")
+        ordering = ["-applied_at"]
 
     def __str__(self):
         return f"{self.pet.name} - {self.vaccine.name} ({self.applied_at})"

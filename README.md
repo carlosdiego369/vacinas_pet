@@ -1,0 +1,72 @@
+# Vacinas Pets API
+
+API REST para controle de vacinação de pets, com perfis **Clínica** e **Tutor**.
+
+## Funcionalidades
+
+- **Clínicas**: cadastram tutores, pets, vacinas e registram aplicações de vacina.
+- **Tutores**: consultam apenas seus pets e o histórico de vacinação (somente leitura).
+- Autenticação via **JWT** (obtenção e refresh de token).
+- Multi-tenant: cada clínica vê apenas seus próprios dados.
+
+## Requisitos
+
+- Python 3.10+
+- pip
+
+## Instalação
+
+```bash
+# Criar e ativar ambiente virtual (recomendado)
+python -m venv venv
+venv\Scripts\activate   # Windows
+# source venv/bin/activate  # Linux/macOS
+
+# Instalar dependências
+pip install -r requirements.txt
+
+# Migrar banco
+python manage.py migrate
+
+# Criar superusuário (opcional, para /admin)
+python manage.py createsuperuser
+```
+
+## Executar
+
+```bash
+python manage.py runserver
+```
+
+- API: `http://127.0.0.1:8000/api/`
+- Admin: `http://127.0.0.1:8000/admin/`
+
+## Autenticação
+
+1. Obter token: `POST /api/token/` com `username` e `password`.
+2. Usar no header: `Authorization: Bearer <access>`.
+3. Renovar: `POST /api/token/refresh/` com `refresh`.
+
+## Endpoints principais
+
+| Recurso           | Descrição                          |
+|-------------------|------------------------------------|
+| `GET /api/me/`    | Dados do usuário logado            |
+| `/api/clinics/`   | Clínicas (apenas perfil clínica)   |
+| `/api/tutors/`    | Tutores da clínica                 |
+| `/api/pets/`      | Pets (clínica ou do tutor)        |
+| `/api/vaccines/`  | Catálogo de vacinas                |
+| `/api/clinic-vaccines/` | Vacinas da clínica          |
+| `/api/vaccinations/`   | Registros de vacinação      |
+
+As listagens usam paginação (20 itens por página).
+
+## Variáveis de ambiente (opcional)
+
+- `DJANGO_SECRET_KEY`: chave secreta (obrigatório em produção).
+- `DJANGO_DEBUG`: `True`/`False` (padrão: True).
+- `DJANGO_ALLOWED_HOSTS`: hosts permitidos, separados por vírgula.
+
+## Licença
+
+Uso interno / educacional.
